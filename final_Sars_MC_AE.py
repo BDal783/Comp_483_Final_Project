@@ -33,7 +33,9 @@ mask = (~(sequences == 'X')).all(axis=1) & (~(sequences == 'J')).all(axis=1)
 sequences = sequences[mask]
 
 # Check for "-" values in sequences and replace them with the column mode
-column_modes = mode(sequences, axis=0).mode
+# Check for "-" values in sequences and replace them with the column mode
+modes_df = pd.DataFrame(sequences).mode()
+column_modes = modes_df.iloc[0].values 
 sequences = np.where(sequences == '-', np.tile(column_modes, (sequences.shape[0], 1)), sequences)
 
 ''' 
