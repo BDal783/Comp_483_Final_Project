@@ -1,0 +1,5 @@
+jcapecci@luc.edu
+SARS-CoV-2 Spike RBD
+10
+01/01/2000
+03/22/2026
