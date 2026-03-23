@@ -1,5 +1,5 @@
-Email: 
-Protein name: 
-Number of sequences to extract: 
-Start date: 2000/01/01
-End date: 2026/03/19
+Email: jcapecci@luc.edu                      
+Protein name: SARS-CoV-2[organism] AND surface glycoprotein[protein name]            
+Number of sequences to extract: 1000
+Start date: 2000/01/01                      
+End date: 2026/03/22
