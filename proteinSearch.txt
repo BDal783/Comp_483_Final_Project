@@ -1,0 +1,5 @@
+Email: 
+Protein name: 
+Number of sequences to extract: 
+Start date: 2000/01/01
+End date: 2026/03/19
