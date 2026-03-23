@@ -34,7 +34,7 @@ End date: {insert date in yyyy/mm/dd format}
 
 This process is performed using the ncbi_extract_merged.py script in the following fashion:
 ```
-python ncbi_extract_merged.py -i proteinSearch.txt -o muttifasta.txt
+python ncbi_extract_merged.py -i proteinSearch.txt -o multifasta.txt
 ```
 However, refer to usage instructions on how to use command-line tool
 
