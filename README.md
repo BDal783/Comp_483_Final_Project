@@ -22,6 +22,13 @@ This pipeline is designed to simplify large-scale viral sequence analysis and
 provide a fast, reproducible method for identifying regions of evolutionary 
 variability.
 
+## data retrieval 
+The pipeline utilizes the Entrez module from Biopython to pull FASTA sequences from NCBI. In order, to retrieve sequences the user must inputa text file
+including the following information: 
+
+Email: {insert email}
+
+
 
 ## Authors
 
