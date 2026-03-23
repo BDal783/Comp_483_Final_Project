@@ -22,7 +22,7 @@ This pipeline is designed to simplify large-scale viral sequence analysis and
 provide a fast, reproducible method for identifying regions of evolutionary 
 variability.
 
-## data retrieval 
+## Data Retrieval 
 The pipeline utilizes the Entrez module from Biopython to pull FASTA sequences from NCBI. In order, to retrieve sequences the user must input a text file (Ex: proteinSearch.txt)
 including the following information: 
 
@@ -37,6 +37,9 @@ This process is performed using the ncbi_extract_merged.py script in the followi
 python ncbi_extract_merged.py -i proteinSearch.txt -o multifasta.txt
 ```
 However, refer to usage instructions on how to use command-line tool
+
+
+## Multiple Sequence Alignment (MSA)
 
 
 ## Authors
