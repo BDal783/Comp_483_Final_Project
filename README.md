@@ -30,11 +30,11 @@ Email: {insert email}
 Protein name: {Insert protein}
 Number of sequences to extract: {insert number}
 Start date: {insert date in yyyy/mm/dd format}
-End date: {insert date in yyyy/mm/dd format
+End date: {insert date in yyyy/mm/dd format}
 
 This process is performed using the ncbi_extract_merged.py script in the following fashion:
 ```
-python ncbi_extract_merged.py -i proteinSearch.txt -o {insert desired output}
+python ncbi_extract_merged.py -i proteinSearch.txt -o muttifasta.txt
 ```
 However, refer to usage instructions on how to use command-line tool
 
