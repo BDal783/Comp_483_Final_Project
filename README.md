@@ -43,6 +43,7 @@ However, refer to usage instructions on how to use command-line tool
 
 
 ## Authors
+This project was worked on by Jimmy Capecci, Leah Briscoe, and Brendon Dal. We are masters students studying bioinformatics at Loyola University Chicago, who have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab] (https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be compleetd as our final project in Comp483.
 
 
 ## Usage instructions 
