@@ -1,1 +1,3 @@
-# Comp_483_Final_Project
+# **Comp_483_Final_Project**
+
+## Highlights
