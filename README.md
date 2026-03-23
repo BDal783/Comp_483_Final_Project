@@ -3,13 +3,24 @@
 
 ## Highlights
   * Successfully identifies mutational hotspots in viral proteins
-  * Users input text file prompting software to pull fasta files from NCBI and returns
-    the areas most likely to mutate 
-  * Utilizes an autoencoder in an unsupervised fashion
+  * Users input text file prompting software to pull fasta files from NCBI
+  * Pipeline performs MSA using [Insert tool]
+  * Utilizes an autoencoder in an unsupervised fashion and returns amino acids most likely to mutate
 
 ## Overview
 
-In this project we adapt the AEGIS framework, developed by the [Miller lab](https://github.com/mccainwa/Dr.Miller-Lab-MP/blob/main/Instructions.md), in order to streamline the process of identifying mutational hotspots in viral proteins. 
+In this project we adapt the AEGIS framework, developed by the 
+[Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP/blob/main/Instructions.md), 
+to streamline the identification of mutational hotspots in viral proteins. 
+
+Our goal is to build a command-line tool that retrieves FASTA sequences for a 
+specified viral protein, performs multiple sequence alignment, and computes 
+mutation probabilities at each amino acid position. The tool outputs positions 
+most likely to mutate, along with the most probable amino acid substitutions.
+
+This pipeline is designed to simplify large-scale viral sequence analysis and 
+provide a fast, reproducible method for identifying regions of evolutionary 
+variability.
 
 
 ## Authors
@@ -17,5 +28,6 @@ In this project we adapt the AEGIS framework, developed by the [Miller lab](http
 
 ## Usage instructions 
 
+Project is work in progress.
 [Insert instructions]
 
