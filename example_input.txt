@@ -1,5 +1,0 @@
-jcapecci@luc.edu
-SARS-CoV-2[organism] AND surface glycoprotein[protein name] 
-1000
-2000/01/01
-2026/03/22
