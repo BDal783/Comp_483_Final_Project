@@ -4,6 +4,7 @@ channels:
   - conda-forge
   - moble
   - bioconda
+  - biobuilds
 dependencies:
   - python=3.12.13
   - pandas=2.2.2
@@ -14,4 +15,7 @@ dependencies:
   - matplotlib=3.10
   - python-snappy
   - openpyxl
+  - mafft
+  - clustalomega
+  - kalign3
   
