@@ -43,7 +43,7 @@ However, refer to usage instructions on how to use command-line tool
 
 
 ## Authors
-This project was worked on by and [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy capecci](https://github.com/jcapecci09). We are masters students studying bioinformatics at Loyola University Chicago, who have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be compleetd as our final project in Comp483.
+This project was worked on by and [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are masters students studying bioinformatics at Loyola University Chicago, who have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be compleetd as our final project in Comp483.
 
 
 ## Usage instructions 
