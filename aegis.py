@@ -15,7 +15,11 @@ def main():
     infile = args.input
 
     # Retrieve data
-    subprocess.run(['python', 'ncbi_extract.py', '-i', infile, '-o', 'output.txt'])
+    subprocess.run(['python', 'ncbi_extract.py', '-i', infile, '-o', 'output.txt'], check=True)
+
+    # Perform MSA 
+    with open('aligned.txt', 'w') as f:
+        subprocess.run(['mafft', '--auto', 'output.txt'], stdout=f, check=True)       
 
 if __name__ == '__main__':
     main()
