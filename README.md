@@ -32,9 +32,9 @@ Number of sequences to extract: {insert number}
 Start date: {insert date in yyyy/mm/dd format}  
 End date: {insert date in yyyy/mm/dd format}  
 
-This process is performed using the ncbi_extract_merged.py script in the following fashion:
+This process is performed using the ncbi_extract.py script in the following fashion:
 ```
-python ncbi_extract_merged.py -i proteinSearch.txt -o multifasta.txt
+python ncbi_extract.py -i proteinSearch.txt -o example_fasta.txt
 ```
 However, refer to usage instructions on how to use command-line tool
 
