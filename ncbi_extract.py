@@ -31,15 +31,24 @@ def main():
     outfile = args.output
 
     # Function to parse proteinSearch.txt for the search parameters
-    def protein_search(input):
+    def protein_search(input: str) -> dict[str, str]:
+        """Turns input file into a dictionary based on colon 
+
+        ex: {'Email': 'youremail@gmail.com',.....}
+
+        :param input: A  input file
+        :return: Dictionary with contents of file
+        """
+
+        # Seperate items from input file and place into a dictionary
         search_terms = {}   
         for line in input:
             param_line = line.split(':')
             search_terms[param_line[0]] = param_line[1].strip()
         return search_terms
 
-    with open(infile, 'r') as i:
     # Read input file and parse search parameters  
+    with open(infile, 'r') as i:
         search = protein_search(i)                   # extract search parameters from the input file
 
     # Protein Sequence Retrieval from NCBI based on search terms
@@ -81,3 +90,4 @@ def main():
 
 if __name__  == '__main__':
     main()
+    
