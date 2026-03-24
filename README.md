@@ -9,7 +9,7 @@
 
 ## Overview
 
-In this project we adapt the AEGIS framework, developed by the 
+In this project we adapt the AEGIS (AutoEncoder-driven Genomic Insight System) framework, developed by the 
 [Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP/blob/main/Instructions.md), 
 to streamline the identification of mutational hotspots in viral proteins. 
 
@@ -21,6 +21,7 @@ most likely to mutate, along with the most probable amino acid substitutions.
 This pipeline is designed to simplify large-scale viral sequence analysis and 
 provide a fast, reproducible method for identifying regions of evolutionary 
 variability.
+
 
 ## Data Retrieval 
 The pipeline utilizes the Entrez module from Biopython to pull FASTA sequences from NCBI. In order, to retrieve sequences the user must input a text file (Ex: proteinSearch.txt)
@@ -47,7 +48,31 @@ This project was worked on by and [Brendon Dal](https://github.com/BDal783), [Le
 
 
 ## Usage instructions 
+This project utilizes a conda virtual enviornment to ensure the AEGIS pipeline runs smoothly with the correct package versions. The following are instructions on setting up the enviornment and running the AEGIS pipeline.   
 
-Project is work in progress.
-[Insert instructions]
+Install and activate miniconda: Only needs to be executed once
+```
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+source ~/miniconda3/bin/activate
+```
 
+Create enviornment: Only needs to be executed once unless contents of conda_env.yaml are altered
+```
+conda env create -f conda_env.yaml
+```
+
+Activate virtual enviornment: Needs to be executed everytime you run pipeline
+```
+conda activate imlabtools2 
+```
+
+Run pipeline with example data:
+```
+python aegis.py -i proteinSearch.txt
+```
+
+Deactivate virtual enviornment:
+```
+conda deactivate
+```
