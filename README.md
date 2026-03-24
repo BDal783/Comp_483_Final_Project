@@ -20,7 +20,7 @@ most likely to mutate, along with the most probable amino acid substitutions.
 
 This pipeline is designed to simplify large-scale viral sequence analysis and 
 provide a fast, reproducible method for identifying regions of evolutionary 
-variability.
+variability. For more information, see the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki)
 
 ## Results
 
