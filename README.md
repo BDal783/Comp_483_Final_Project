@@ -48,31 +48,37 @@ This project was worked on by and [Brendon Dal](https://github.com/BDal783), [Le
 
 
 ## Usage instructions 
-This project utilizes a conda virtual enviornment to ensure the AEGIS pipeline runs smoothly with the correct package versions. The following are instructions on setting up the enviornment and running the AEGIS pipeline.   
+This project utilizes a conda virtual environment to ensure the AEGIS pipeline runs smoothly with the correct package versions. Follow the steps below:
 
-Install and activate miniconda: Only needs to be executed once
+Clone repo:
+```
+git clone https://github.com/BDal783/Comp_483_Final_Project.git
+cd Comp_483_Final_Project
+```
+
+Install and activate miniconda (Only once):
 ```
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
 source ~/miniconda3/bin/activate
 ```
 
-Create enviornment: Only needs to be executed once unless contents of conda_env.yaml are altered
+Create environment (only once, unless conda_env.yaml changes)
 ```
 conda env create -f conda_env.yaml
 ```
 
-Activate virtual enviornment: Needs to be executed everytime you run pipeline
+Activate virtual environment (every session):
 ```
 conda activate imlabtools2 
 ```
 
-Run pipeline with example data:
+Run the pipeline with example data:
 ```
 python aegis.py -i proteinSearch.txt
 ```
 
-Deactivate virtual enviornment:
+Deactivate virtual environment (optional)
 ```
 conda deactivate
 ```
