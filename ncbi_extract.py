@@ -70,23 +70,11 @@ def main():
     handle = Entrez.efetch(db="protein", id=ids, rettype="fasta", retmode="text") # protein sequences retrieved by IDs in fasta format
     records = SeqIO.parse(handle, "fasta")                              # record created reading in the handle containing the fasta format protein sequences           
 
-    # intialize  set and list to deduplicate sequences
-    seen = set()
-    deduplicated = []
 
-    # remove any duplicates from sequences
-    for record in records:
-        seq = str(record.seq)
-
-        # If seq  is not in the set add it to the deduplicated list
-        # and the set
-        if seq not in seen:
-            deduplicated.append(record)
-            seen.add(seq)
     
     # Write fastas to mulit-fasta file
     with open(outfile, 'w') as f:
-        SeqIO.write(deduplicated, f, "fasta")
+        SeqIO.write(records, f, "fasta")
 
 if __name__  == '__main__':
     main()
