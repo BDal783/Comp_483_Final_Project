@@ -1,10 +1,14 @@
+"""Filters out sequences that have too many amibigious amino acids. Users
+input a threshold percentage (Ex: 5 = sequences with 5% or greater 
+ambigious amino acids are removed).
 
-
+Author: jcapecci09 Jimmy Capecci
+"""
 
 import argparse
 import sys
 
-def filter(read: str):
+def filter(read: str, threshold_percentage: int):
     """Filters out any reads with ambigious amino acids
     5% or greater. 
 
@@ -22,7 +26,7 @@ def filter(read: str):
             ambigious_aa += 1
     
     # If there are too many ambigious amino acids return True
-    if (ambigious_aa / read_length) >= 0.05:
+    if (ambigious_aa / read_length) >= threshold_percentage:
         return True
     else:
         return False
@@ -32,12 +36,16 @@ def main():
     # Set up parser
     parser = argparse.ArgumentParser(description='Runs the AEGIS pipeline')
     parser.add_argument('-i', '--input', help='input file', required=True)
+    parser.add_argument('-p', '--threshold', help='percentage of ' \
+    'ambigious amino acids allowed in a sequence', required=True)
     parser.add_argument('-o', '--output', help='output file', required=True)
 
     # Define infile
     args = parser.parse_args(sys.argv[1:])
     infile = args.input
     outfile = args.output
+    thres = args.threshold
+    thres = int(thres) / 100
 
     # Collect fasta fil4es in a dictionary
     # With header as key and sequence as value
@@ -59,7 +67,7 @@ def main():
     # Filter dictionary only including fastas that pass the threshold
     filtered_fastas = {}
     for each_read in fastas:
-        if not filter(fastas[each_read]):
+        if not filter(fastas[each_read], thres):
 
             filtered_fastas[each_read] = fastas[each_read]
     
