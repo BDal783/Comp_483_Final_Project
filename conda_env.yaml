@@ -1,4 +1,4 @@
-name: imlabtools2
+name: aegis
 channels:
   - defaults
   - conda-forge
@@ -17,5 +17,6 @@ dependencies:
   - openpyxl
   - mafft
   - clustalomega
-  - kalign3
   - biopython
+  - pip:
+    - kalign-python
