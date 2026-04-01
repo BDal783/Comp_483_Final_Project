@@ -15,15 +15,43 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from scipy.stats import mode
 from sklearn.model_selection import train_test_split
+from Bio import SeqIO
 
+'''
 #%% Load Data and One-Hot Encode
 # Load your amino acid sequence data into a DataFrame
 df = pd.read_excel('All_RBD.xlsx')
+print(df.head(n=5))
+'''
 
+def fasta_to_dataframe(fasta_path):
+    records = list(SeqIO.parse(fasta_path, "fasta"))
+    seq_data = [list(str(record.seq)) for record in records]
+    df = pd.DataFrame(seq_data)
+    df.insert(0, "ID", [record.id for record in records])
+    column_names= ['ID']
+    lengths=[]
+    for seq in seq_data:
+        lengths.append(len(seq))
+    num_letters = max(lengths)
+    print(num_letters)
+    for i in range(num_letters):
+        column_names.append(f"Letter {i+1}")
+    df.columns = column_names
+    return df
+
+fasta_file = "clean_sequences.txt"
+
+df = fasta_to_dataframe(fasta_file)
+#print(df2.head(n=5))
+
+
+'''
 # Check if there are underscores in the 'File' column
 if any(df['File'].str.contains(r'_')):
     # Remove the last underscore and anything that follows it in the 'File' column values
     df['File'] = df['File'].str.replace(r'_\d+$', '', regex=True)
+'''
 
 # Get the amino acid sequences as input data
 sequences = df.iloc[:, 1:].astype(str).values
@@ -39,9 +67,11 @@ column_modes = modes_df.iloc[0].values
 sequences = np.where(sequences == '-', np.tile(column_modes, (sequences.shape[0], 1)), sequences)
 
 ''' 
+
 #add if you want to save specific sequence
 df1 = pd.DataFrame(sequences)
 df1.to_excel(r'/home/blim/Documents/Summer2023/DENV/HPV_L1_mode.xlsx')
+
 '''
 
 # Create a mapping from amino acid to integer
