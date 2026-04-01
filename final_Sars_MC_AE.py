@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 from scipy.stats import mode
 from sklearn.model_selection import train_test_split
 from Bio import SeqIO
+from __future__ import annotations
+import argparse
 
 '''
 #%% Load Data and One-Hot Encode
@@ -24,23 +26,37 @@ df = pd.read_excel('All_RBD.xlsx')
 print(df.head(n=5))
 '''
 
-def fasta_to_dataframe(fasta_path):
+def fasta_to_dataframe(fasta_path: str) -> pd.DataFrame:
+    """Turns multi-fasta file into pandas dataframe with rows as samples
+    and columns as postions in the sequence. Fasta file must be aligned 
+    beforehand.
+
+    :param fasta_path: Fasta file to turn into dataframe
+    :return: dataframe
+    """
+
+    # Create a list of SeqIO objects for each fasta record
     records = list(SeqIO.parse(fasta_path, "fasta"))
+
+    # For each fasta record take the sequence and place in a list
+    # Ex: [['A', 'G', 'P'...], ['A', 'C', 'P'....],....]
     seq_data = [list(str(record.seq)) for record in records]
+
+    # Turn into a dataframe and add the id
     df = pd.DataFrame(seq_data)
     df.insert(0, "ID", [record.id for record in records])
-    column_names= ['ID']
-    lengths=[]
-    for seq in seq_data:
-        lengths.append(len(seq))
-    num_letters = max(lengths)
-    print(num_letters)
-    for i in range(num_letters):
+
+    # Set up column names for the dataframe
+    # Ex: ['ID', 'Letter1', 'Letter2', 'Letter3'....] Until max letter
+    column_names = ['ID']
+    lengths = []
+    max_letter = len(seq_data[0])
+    for i in range(max_letter):
         column_names.append(f"Letter {i+1}")
     df.columns = column_names
     return df
 
-fasta_file = "clean_sequences.txt"
+fasta_file = "aligned.txt"
 
 df = fasta_to_dataframe(fasta_file)
 #print(df2.head(n=5))

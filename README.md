@@ -51,9 +51,9 @@ Activate virtual environment (every session):
 ```
 conda activate imlabtools2 
 ```
-
 Run the pipeline with example data:
 ```
+python aegis.py -i proteinSearch.txt
 python aegis.py -i proteinSearch.txt
 ```
 

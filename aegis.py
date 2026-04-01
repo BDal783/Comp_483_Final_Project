@@ -23,24 +23,28 @@ def main():
     else:
         thres = '5'
 
+    print('Retrieving data')
     # Retrieve data
     subprocess.run(['python', 'ncbi_extract.py', '-i', infile, '-o', 'proteins.txt'], check=True)
+    print('Data retrieved')
 
+    print(f'Filtering low quality reads with {thres}% threshold')
     # Filter low quality sequences
     subprocess.run(['python', 'filter.py', '-i', 'proteins.txt', '-o', 
                     'filtered_proteins.txt', '-p', thres])
+    print('Reads filtered')
 
-    # Start time of MAFFT
-    start_time = time.perf_counter()
-
+    print('Performing multiple sequence alignment')
     # Perform MSA 
     with open('aligned.txt', 'w') as f:
-        subprocess.run(['mafft', '--auto', '--quiet', 'filtered_proteins.txt'], stdout=f, check=True)      
+        subprocess.run(['mafft', '--auto', '--quiet', 'filtered_proteins.txt'], stdout=f, check=True) 
+    print('Sequences aligned') 
 
-    # find time MAFFT took to run
-    end_time = time.perf_counter()
-    elapsed_time = end_time - start_time
-    print("MAFFT Time: " + str(elapsed_time))
+    print('Running autoencoder')
+    # Perform autoencoder
+    subprocess.run(['python', 'autoencoder.py', '-i', 'aligned.txt'])  
+    print('AEGIS pipeline complete') 
+    
 
 if __name__ == '__main__':
     main()
