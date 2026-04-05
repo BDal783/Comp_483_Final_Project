@@ -1,15 +1,15 @@
-# **Comp_483_Final_Project**
+# **COMP483 Project: Machine Learning for Predicting Viral Protein Mutational Landscapes**
 
 
 ## Highlights
   * Successfully identifies mutational hotspots in viral proteins
-  * Users input text file prompting software to pull fasta files from NCBI
-  * Pipeline performs MSA using [Insert tool]
+  * Users input a template text file, prompting software to pull FASTA files from NCBI
+  * Pipeline performs MSA using MAFFT
   * Utilizes an autoencoder in an unsupervised fashion and returns amino acids most likely to mutate
 
 ## Overview
 
-In this project we adapt the AEGIS (AutoEncoder-driven Genomic Insight System) framework, developed by the 
+In this project, we adapt the AEGIS (AutoEncoder-driven Genomic Insight System) framework, developed by the 
 [Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP/blob/main/Instructions.md), 
 to streamline the identification of mutational hotspots in viral proteins. 
 
@@ -22,11 +22,19 @@ This pipeline is designed to simplify large-scale viral sequence analysis and
 provide a fast, reproducible method for identifying regions of evolutionary 
 variability. For more information, see the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki)
 
+## Methods
+The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. The general steps the framework implements are as follows:
+
+1. Retrieving viral protein sequences from NCBI: Using the parameter specified in proteinSearch.txt, the pipeline uses Bio.Entrez to search NCBI for the desired viral protein sequences and save them to the FASTA proteins.txt.
+2. Filter low-quality reads: Some sequences have a high proportion of ambiguous amino acids (X's), indicating a poor quality read. The pipeline will remove reads that surpass the threshold for the percentage of ambiguous amino acids in the sequence (Ex: threshold = 5, sequences with 5% or greater ambiguous amino acids are removed).
+3. Perform MSA using MAFFT: The filtered sequences are aligned using MAFFT. MAFFT will automatically adjust its methods depending on the number of sequences to align to favor speed or accuracy.
+4. Format sequences and run the autoencoder: The aligned sequences, stored in the FASTA aligned.txt, are converted into a dataframe format to be fed into the machine learning pipeline. One-hot encoding is then applied to the sequences to convert the amino acids into numerical vectors.
+
 ## Results
 
 
-
-## Usage instructions 
+## Usage Instructions 
+### Setup
 This project utilizes a conda virtual environment to ensure the AEGIS pipeline runs smoothly with the correct package versions. Follow the steps below:
 
 Clone repo:
@@ -42,18 +50,19 @@ bash Miniconda3-latest-Linux-x86_64.sh
 source ~/miniconda3/bin/activate
 ```
 
-Create environment (only once, unless conda_env.yaml changes)
+Create environment (only once, unless conda_env.yaml changes):
 ```
 conda env create -f conda_env.yaml
 ```
-
+### Running the Pipeline
 Activate virtual environment (every session):
 ```
-conda activate imlabtools2 
+conda activate aegis
 ```
-Run the pipeline with example data:
+To run the pipeline, edit the template text file called "proteinSearch.txt" with the search parameters for your desired viral protein. You will enter your email address, protein search term, the number of sequences to extract, and the start and end publication dates (format YYYY/MM/DD) to extract sequences from NCBI. When deciding the number of sequences, keep in mind that the pipeline will drop low-quality sequences with a high percentage of ambiguous amino acids, based on the quality threshold defined in aegis.py.
+
+Once you have filled out the template text file, you can run the full pipeline by running this command:
 ```
-python aegis.py -i proteinSearch.txt
 python aegis.py -i proteinSearch.txt
 ```
 
@@ -63,4 +72,4 @@ conda deactivate
 ```
 
 ## Authors
-This project was worked on by and [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are masters students studying bioinformatics at Loyola University Chicago, who have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be compleetd as our final project in Comp483.
+This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be completed as our final project in COMP483 Computational Biology.
