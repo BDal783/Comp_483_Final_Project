@@ -25,12 +25,12 @@ def main():
 
     print('Retrieving data')
     # Retrieve data
-    subprocess.run(['python', 'ncbi_extract.py', '-i', infile, '-o', 'proteins.txt'], check=True)
+    subprocess.run(['python', 'scripts/ncbi_extract.py', '-i', infile, '-o', 'proteins.txt'], check=True)
     print('Data retrieved')
 
     print(f'Filtering low quality reads with {thres}% threshold')
     # Filter low quality sequences
-    subprocess.run(['python', 'filter.py', '-i', 'proteins.txt', '-o', 
+    subprocess.run(['python', 'scripts/filter.py', '-i', 'proteins.txt', '-o', 
                     'filtered_proteins.txt', '-p', thres])
     print('Reads filtered')
 
@@ -42,7 +42,7 @@ def main():
 
     print('Running autoencoder')
     # Perform autoencoder
-    subprocess.run(['python', 'autoencoder.py', '-i', 'aligned.txt'])  
+    subprocess.run(['python', 'scripts/autoencoder.py', '-i', 'aligned.txt'])  
     print('AEGIS pipeline complete') 
     
 
