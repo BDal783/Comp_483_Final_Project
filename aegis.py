@@ -42,7 +42,7 @@ def main():
 
     print('Running autoencoder')
     # Perform autoencoder
-    subprocess.run(['python', 'scripts/autoencoder.py', '-i', 'aligned.txt'])  
+    subprocess.run(['python', 'scripts/temp_autoencoder.py', '-i', 'aligned.txt'])  
     print('AEGIS pipeline complete') 
     
 
