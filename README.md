@@ -64,7 +64,7 @@ Activate virtual environment (every session):
 ```
 conda activate aegis
 ```
-To run the pipeline, edit the template text file called "proteinSearch.txt" with the search parameters for your desired viral protein. You will enter your email address, protein search term, the number of sequences to extract, and the start and end publication dates (format YYYY/MM/DD) to extract sequences from NCBI. When deciding the number of sequences, keep in mind that the pipeline will drop low-quality sequences with a high percentage of ambiguous amino acids, based on the quality threshold defined in aegis.py.
+To run the pipeline, edit the template text file called "proteinSearch.txt" with the search parameters for your desired viral protein. You will enter your email address, protein search term, the number of sequences to extract, and the start and end publication dates (format YYYY/MM/DD) to extract sequences from NCBI. When deciding the number of sequences, keep in mind that the pipeline will drop low-quality sequences with a high percentage of ambiguous amino acids, based on the quality threshold defined in aegis.py. The maximum number of sequences you can extract is 10,000.
 
 Once you have filled out the template text file, you can run the full pipeline by running this command:
 ```
