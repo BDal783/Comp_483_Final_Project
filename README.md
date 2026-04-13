@@ -31,7 +31,10 @@ The main script, aegis.py, runs the full pipeline by calling other scripts via s
 4. Format sequences and run the autoencoder: The aligned sequences, stored in the FASTA aligned.txt, are converted into a dataframe format to be fed into the machine learning pipeline. One-hot encoding is then applied to the sequences to convert the amino acids into numerical vectors. The autoencoder model is trained using the TensorFlow package; Monte Carlo dropout inference and Markov transition modeling are performed to factor in model uncertainty and calculate transition probabilities, respectively.
 5. Tables and figures: Tables summarizing the top predicted mutation hotspots (local and global positions, amino acid mutations, mutation probabilities) are saved as CSV files. Scatterplots, bar charts, and heatmaps summarizing mutation hotspot probability, Markov transitions, and entropy and variance are saved to the /figures folder.
 
-## Results
+## Outputs
+
+* heatmap_probs_top_hotspots.png: Shows mutational hotspots and probabiliy of mutating to each amino acid
+* 
 
 
 ## Usage Instructions 
