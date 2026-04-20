@@ -116,7 +116,7 @@ def main():
     latent_vectors = encoders.predict(encoded_sequences, verbose=0)
 
     #%% Monte Carlo Dropout Inference (AEGIS)
-    T = 500                  # increase if you have time/compute (e.g., 500–1000)
+    T = 1000                  # increase if you have time/compute (e.g., 500–1000)
     eps = 1e-12
 
     mc_pass_means = []       # each item: (L, V) mean over test samples for that pass
