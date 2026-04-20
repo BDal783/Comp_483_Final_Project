@@ -5,7 +5,7 @@ Created on Thu Jul 20 15:00:47 2023
 
 @author: blim
 """
-
+from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 from scipy.stats import mode
 from sklearn.model_selection import train_test_split
 from Bio import SeqIO
-from __future__ import annotations
 import argparse
 
 '''
@@ -49,7 +48,6 @@ def fasta_to_dataframe(fasta_path: str) -> pd.DataFrame:
     # Set up column names for the dataframe
     # Ex: ['ID', 'Letter1', 'Letter2', 'Letter3'....] Until max letter
     column_names = ['ID']
-    lengths = []
     max_letter = len(seq_data[0])
     for i in range(max_letter):
         column_names.append(f"Letter {i+1}")
@@ -129,7 +127,7 @@ encoders = Model(inputs=input_layer, outputs=x)
 latent_vectors = encoders.predict(encoded_sequences, verbose=0)
 
 #%% Monte Carlo Dropout Inference (AEGIS)
-T = 200                  # increase if you have time/compute (e.g., 500–1000)
+T = 1000                  # increase if you have time/compute (e.g., 500–1000) Base is 200
 eps = 1e-12
 
 mc_pass_means = []       # each item: (L, V) mean over test samples for that pass
@@ -256,7 +254,7 @@ int_to_amino_acid = {i: aa for i, aa in enumerate(amino_acids)}
 decoded_consensus = np.array([int_to_amino_acid[i] for i in top1_idx], dtype=object)
 
 # If you want the same 'mutation_df' you had before, but from MC means:
-RBD_OFFSET = 331
+RBD_OFFSET = 331  #LOOOOOK AT THISSSSSSSSSSS
 K = 10  # top K ambiguous sites (smallest margin)
 min_diff_positions = np.argsort(margin)[:K]
 
