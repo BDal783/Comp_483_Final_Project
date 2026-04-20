@@ -23,13 +23,14 @@ provide a fast, reproducible method for identifying regions of evolutionary
 variability. For more information, see the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki)
 
 ## Methods
-The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. The general steps the framework implements are as follows:
+The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. For more information visit the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki) The general steps the framework implements are as follows:
 
-1. Retrieving viral protein sequences from NCBI: Using the parameter specified in proteinSearch.txt, the pipeline uses Bio.Entrez to search NCBI for the desired viral protein sequences and save them to the FASTA proteins.txt.
-2. Filter low-quality reads: Some sequences have a high proportion of ambiguous amino acids (X's), indicating a poor quality read. The pipeline will remove reads that surpass the threshold for the percentage of ambiguous amino acids in the sequence (Ex: threshold = 5, sequences with 5% or greater ambiguous amino acids are removed).
-3. Perform MSA using MAFFT: The filtered sequences are aligned using MAFFT. MAFFT will automatically adjust its methods depending on the number of sequences to align to favor speed or accuracy.
-4. Format sequences and run the autoencoder: The aligned sequences, stored in the FASTA aligned.txt, are converted into a dataframe format to be fed into the machine learning pipeline. One-hot encoding is then applied to the sequences to convert the amino acids into numerical vectors. The autoencoder model is trained using the TensorFlow package; Monte Carlo dropout inference and Markov transition modeling are performed to factor in model uncertainty and calculate transition probabilities, respectively.
-5. Tables and figures: Tables summarizing the top predicted mutation hotspots (local and global positions, amino acid mutations, mutation probabilities) are saved as CSV files. Scatterplots, bar charts, and heatmaps summarizing mutation hotspot probability, Markov transitions, and entropy and variance are saved to the /figures folder.
+1. Retrieving viral protein sequences from NCBI
+2. Filter low-quality reads
+3. Perform MSA using MAFFT
+4. one-hot encoding (incude gaps and ambigious amino acids into encoding scheme)
+5. run autoencoder and include Monte Carlo dropout inference and Markov transition modeling 
+7. Output figures
 
 ## Outputs
 
