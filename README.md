@@ -22,6 +22,16 @@ This pipeline is designed to simplify large-scale viral sequence analysis and
 provide a fast, reproducible method for identifying regions of evolutionary 
 variability. For more information, see the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki)
 
+## Methods
+The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. For more information visit the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki) The general steps the framework implements are as follows:
+
+1. Retrieving viral protein sequences from NCBI
+2. Filter low-quality reads
+3. Perform MSA using MAFFT
+4. one-hot encoding (incude gaps and ambigious amino acids into encoding scheme)
+5. run autoencoder and include Monte Carlo dropout inference and Markov transition modeling 
+7. Output figures
+
 ## Usage Instructions 
 ### Setup
 This project utilizes a conda virtual environment to ensure the AEGIS pipeline runs smoothly with the correct package versions. Follow the steps below:
@@ -59,16 +69,6 @@ Deactivate virtual environment (optional)
 ```
 conda deactivate
 ```
-
-## Methods
-The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. For more information visit the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki) The general steps the framework implements are as follows:
-
-1. Retrieving viral protein sequences from NCBI
-2. Filter low-quality reads
-3. Perform MSA using MAFFT
-4. one-hot encoding (incude gaps and ambigious amino acids into encoding scheme)
-5. run autoencoder and include Monte Carlo dropout inference and Markov transition modeling 
-7. Output figures
 
 ## Outputs
 
