@@ -34,10 +34,12 @@ The main script, aegis.py, runs the full pipeline by calling other scripts via s
 
 ## Outputs
 
-/home/bdal/Comp_483_Final_Project/figures/heatmap_probs_top_hotspots.png
+<img width="3000" height="1050" alt="heatmap_probs_top_hotspots" src="https://github.com/user-attachments/assets/39827f65-3b81-47d3-a7af-42db03702a7c" />
 
-* heatmap_probs_top_hotspots.png: Shows mutational hotspots and probabiliy of mutating to each amino acid
-/home/bdal/Comp_483_Final_Project/figures/entropy_strip.png
+* heatmap_probs_top_hotspots.png: Shows mutational hotspots and probability of mutating to each amino acid
+
+
+<img width="3000" height="525" alt="entropy_strip" src="https://github.com/user-attachments/assets/ad8104c4-ef5a-4c3a-b39d-fdd21a1ca78d" />
 
 * entropy_strip.png: High entropy peaks represent areas where the Autoencoder’s "accuracy" is lowest. This tells you which parts of the protein the model finds complex or poorly represented in the training data.
 
