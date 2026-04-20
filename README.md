@@ -23,7 +23,7 @@ provide a fast, reproducible method for identifying regions of evolutionary
 variability. For more information, see the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki)
 
 ## Methods
-The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. The general steps the framework implements are as follows:
+The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. For more information visit the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki) The general steps the framework implements are as follows:
 
 1. Retrieving viral protein sequences from NCBI
 2. Filter low-quality reads
