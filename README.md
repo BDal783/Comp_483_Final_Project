@@ -83,28 +83,6 @@ conda deactivate
 
 * epistemic_var_strip.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
 
-* entropy_heatmap.png: Similar to entropy_strip.png, but as a heatmap.
-
-* lollipop_top2_over_top1.png: Lollipop chart of the ratios between the Top 2 and Top 1 probabilities for the top 10 predicted hotspots. Ambiguous probabilities have a ratio closer to 1.
-
-* margin_vs_entropy.png: For each position (hotspots labeled), this plot shows the Top1-Top2 margin score with the Shannon entropy. Top hotpots should be near the top left (low margin and high entropy).
-
-* markov_transition_avg.png: Heat map showing the Markov transition probabilities across all positions.
-
-* markov_transition_pos_#.png: Heatmap showing predicted Markov transitions (amino acid transitions) for the top predicted mutation hotspot position (#).
-
-* rank_shift_mc_vs_fused.png: Shows how the ranking of the top hotpots changed after Markov transition probabilities were implemented into the model. The X-axis is before Markov (at the Monte Carlo inference step), and the Y-axis shows the change with the ‘fused’ model.
-
-* scatter_confidence_vs_position.png: Scatterplot showing the confidence scores of the top 10 predicted mutation hotspots.
-
-* top_hotspots_mc.png: Barchart showing the top predicted mutation hotspots ordered by hotspot composite score; low Top1-Top2 probability margin, high Shannon entropy, and high epistemic variance are used to calculate the composite score, indicating probable mutation hotspots.
-
-* top_mutations_confidence.png: Barchart showing the top predicted mutation hotspots ordered by confidence score.
-
-* top mutations_small_margin.png: Shows the most ambiguous hotspot positions ordered from smallest to largest margin.
-
-* top1_top2_probs_ambiguous.png: Barchart comparing the ratio of Top1 and Top2 probabilities at most ambiguous positions (shows where the largest gaps are).
-
 ## Authors
 This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be completed as our final project in COMP483 Computational Biology.
 
