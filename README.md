@@ -10,7 +10,7 @@
 ## Overview
 
 In this project, we adapt the AEGIS (AutoEncoder-driven Genomic Insight System) framework, developed by the 
-[Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP/blob/main/Instructions.md), 
+[Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP), 
 to streamline the prediction of mutational hotspots in viral proteins. 
 
 Our goal is to build a command-line tool that retrieves FASTA sequences for a 
