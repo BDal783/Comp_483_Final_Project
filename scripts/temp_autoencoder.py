@@ -317,19 +317,53 @@ def main():
     plt.tight_layout(); plt.savefig("figures/margin_vs_entropy.png");
 
     #%% Probability heatmap
+    #oredering amino acide by groups for better understanding
+    aa_order = [
+    # Hydrophobic
+    'A','V','I','L','M','F','W','Y',
+    # uncharged
+    'S','T','N','Q',
+    # Charged
+    'D','E','K','R','H',
+    #ambigous
+    'B', 'Z', 'Z',
+    # other
+    'G','P','C'
+    ]
+    #print(len(amino_acids), amino_acids)
 
-    subset = rank_idx[:10]  # top 10 hotspots
-    P = mean_prob_mc[subset, :]  # shape: 10 × V
+    #sorts rank idx (the top 15 most ambigous hotspots) internally in descending order
+    subset = rank_idx[np.argsort(-score_fused[rank_idx])]
+    #grabs probabilities
+    P = mean_prob_mc[subset, :]  
+    # creates an index map of amino acids
+    aa_to_idx = {aa: i for i, aa in enumerate(amino_acids)}
+    #reordering them to group by type
+    reorder_idx = [aa_to_idx[aa] for aa in aa_order]
+    #reorders probabilities
+    P = P[:, reorder_idx]
+    #normalizes inter column for better internal change understanding but losing between column comparison
+    P_norm = P / np.clip(P.max(axis=1, keepdims=True), 1e-12, None)
 
     plt.figure(figsize=(10, 3.5))
     plt.imshow(P.T, aspect="auto", origin="lower", interpolation="nearest")
-    plt.yticks(np.arange(V), amino_acids)
+    plt.yticks(np.arange(len(aa_order)), aa_order)
     plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
     plt.colorbar(label="Probability")
     plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
-    plt.title("Per-AA probabilities at top hotspots (MC mean)")
+    plt.title("Per-AA probabilities at top hotspots (MC Mean Sorted by Ambiguity)")
     plt.tight_layout(); plt.savefig("figures/heatmap_probs_top_hotspots.png")
 
+    #looking within row variation
+    plt.figure(figsize=(10, 3.5))
+    plt.imshow(P_norm.T, aspect="auto", origin="lower", interpolation="nearest")
+    plt.yticks(np.arange(len(aa_order)), aa_order)
+    plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
+    plt.colorbar(label="Relative probability")
+    plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
+    plt.title("Per-AA probabilities at top hotspots (MC Mean Normalized)")
+  
+    plt.tight_layout(); plt.savefig("figures/heatmap_probs_normalized.png")
     #%% Markov transition heatmap (OK this doesn't really work idk why)
 
     # Average transition matrix across positions
