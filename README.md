@@ -10,7 +10,7 @@
 ## Overview
 
 In this project, we adapt the AEGIS (AutoEncoder-driven Genomic Insight System) framework, developed by the 
-[Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP/blob/main/Instructions.md), 
+[Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP), 
 to streamline the prediction of mutational hotspots in viral proteins. 
 
 Our goal is to build a command-line tool that retrieves FASTA sequences for a 
@@ -23,25 +23,14 @@ provide a fast, reproducible method for identifying regions of evolutionary
 variability. For more information, see the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki)
 
 ## Methods
-The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. For more information visit the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki) The general steps the framework implements are as follows:
+The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. For more information, visit the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki). The general steps the framework implements are as follows:
 
 1. Retrieving viral protein sequences from NCBI
 2. Filter low-quality reads
 3. Perform MSA using MAFFT
-4. one-hot encoding (incude gaps and ambigious amino acids into encoding scheme)
-5. run autoencoder and include Monte Carlo dropout inference and Markov transition modeling 
+4. One-hot encoding (include gaps and ambiguous amino acids into the encoding scheme)
+5. Run autoencoder and include Monte Carlo dropout inference and Markov transition modeling 
 7. Output figures
-
-## Outputs
-
-![Heatmap](/home/bdal/Comp_483_Final_Project/figures/heatmap_probs_top_hotspots.png)
-
-* heatmap_probs_top_hotspots.png: Shows mutational hotspots and probabiliy of mutating to each amino acid
-
-![Entropy](/home/bdal/Comp_483_Final_Project/figures/entropy_strip.png)
-
-* entropy_strip.png: High entropy peaks represent areas where the Autoencoder’s "accuracy" is lowest. This tells you which parts of the protein the model finds complex or poorly represented in the training data.
-
 
 ## Usage Instructions 
 ### Setup
@@ -80,6 +69,19 @@ Deactivate virtual environment (optional)
 ```
 conda deactivate
 ```
+
+## Outputs
+
+<img width="3000" height="1050" alt="heatmap_probs_top_hotspots" src="https://github.com/user-attachments/assets/39827f65-3b81-47d3-a7af-42db03702a7c" />
+
+* heatmap_probs_top_hotspots.png: Shows mutational hotspots and probability of mutating to each amino acid
+
+
+<img width="3000" height="525" alt="entropy_strip" src="https://github.com/user-attachments/assets/ad8104c4-ef5a-4c3a-b39d-fdd21a1ca78d" />
+
+* entropy_strip.png: High entropy peaks represent areas where the Autoencoder’s "accuracy" is lowest. This tells you which parts of the protein the model finds complex or poorly represented in the training data.
+
+* epistemic_var_strip.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
 
 ## Authors
 This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be completed as our final project in COMP483 Computational Biology.
