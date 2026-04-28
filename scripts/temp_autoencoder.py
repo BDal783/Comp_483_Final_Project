@@ -141,9 +141,8 @@ def main():
 
     V = len(amino_acids)
     L = sequences.shape[1]
-    aa_to_idx = {aa:i for i, aa in enumerate(amino_acids)}
+    aa_to_idx = {aa:i for i, aa in enumerate(amino_acids)}  
     idx_to_aa = {i:aa for aa, i in aa_to_idx.items()}
-    RBD_OFFSET = 331
 
     # Per-position transition matrices Tmat[j] shape (V,V): P(next=b | current=a) at position j
     Tmat = np.zeros((L, V, V), dtype=float)
@@ -198,8 +197,7 @@ def main():
     fused_rows = []
     for j in rank_idx:
         fused_rows.append({
-            "Position (RBD idx)": int(j),
-            "Global Position": int(j+ RBD_OFFSET),
+            "Position ": int(j),
             "Top1 (fused)": idx_to_aa[int(top1_f[j])],
             "Top2 (fused)": idx_to_aa[int(top2_f[j])],
             "Top1 Prob (fused)": float(p1f[j]),
@@ -248,7 +246,6 @@ def main():
         confidence = 1.0 - float(margin[pos])  # your legacy "1 - margin" score
         mutation_rows.append({
             "Position": int(pos),
-            "Global Position": int(pos + RBD_OFFSET),
             "Mutation": f"{aa1} -> {aa2}",
             "Top1 Prob": float(p1[pos]),
             "Top2 Prob": float(p2[pos]),
@@ -265,12 +262,12 @@ def main():
     plt.rcParams.update({"figure.dpi": 160, "savefig.dpi": 300, "font.size": 10})
     os.makedirs("figures", exist_ok=True)
     L, V = mean_prob_mc.shape
-    pos_axis = np.arange(L) + RBD_OFFSET
+    pos_axis = np.arange(L)
 
     #%% Entropy strip across positions
     plt.figure(figsize=(10, 1.75))
     plt.plot(pos_axis, entropy_pos, lw=1.5)
-    plt.xlabel("Spike residue (global numbering)"); plt.ylabel("Entropy")
+    plt.xlabel("Protein residue"); plt.ylabel("Entropy")
     plt.title("Shannon entropy per position (MC mean distribution)")
     plt.tight_layout(); plt.savefig("figures/entropy_strip.png")
 
@@ -278,7 +275,7 @@ def main():
     #%% Epistemic variance strip across positions
     plt.figure(figsize=(10, 1.75))
     plt.plot(pos_axis, epi_var_pos, lw=1.5)
-    plt.xlabel("Spike residue (global numbering)"); plt.ylabel("Epistemic var")
+    plt.xlabel("Protein residue"); plt.ylabel("Epistemic var")
     plt.title("Epistemic variance per position (MC dropout)")
     plt.tight_layout(); plt.savefig("figures/epistemic_var_strip.png")
 
@@ -350,7 +347,7 @@ def main():
     plt.yticks(np.arange(len(aa_order)), aa_order)
     plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
     plt.colorbar(label="Probability")
-    plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
+    plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
     plt.title("Per-AA probabilities at top hotspots (MC Mean Sorted by Ambiguity)")
     plt.tight_layout(); plt.savefig("figures/heatmap_probs_top_hotspots.png")
 
@@ -360,7 +357,7 @@ def main():
     plt.yticks(np.arange(len(aa_order)), aa_order)
     plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
     plt.colorbar(label="Relative probability")
-    plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
+    plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
     plt.title("Per-AA probabilities at top hotspots (MC Mean Normalized)")
   
     plt.tight_layout(); plt.savefig("figures/heatmap_probs_normalized.png")
@@ -411,18 +408,18 @@ def main():
     # 1) Load
     df = pd.read_excel("top_mutations_mc.xlsx")
     # ensure expected columns exist
-    expected = ["Position","Global Position","Mutation","Top1 Prob","Top2 Prob","Confidence Score"]
+    expected = ["Position","Mutation","Top1 Prob","Top2 Prob","Confidence Score"]
     missing = [c for c in expected if c not in df.columns]
     if missing:
         raise ValueError(f"Missing columns in Excel: {missing}")
 
     # clean / types
-    for c in ["Position","Global Position"]:
+    for c in ["Position"]:
         df[c] = pd.to_numeric(df[c], errors="coerce")
     for c in ["Top1 Prob","Top2 Prob","Confidence Score"]:
         df[c] = pd.to_numeric(df[c], errors="coerce")
 
-    df = df.dropna(subset=["Global Position","Top1 Prob","Top2 Prob","Confidence Score"]).copy()
+    df = df.dropna(subset=["Top1 Prob","Top2 Prob","Confidence Score"]).copy()
 
     # derived
     df["Margin (Top1-Top2)"] = df["Top1 Prob"] - df["Top2 Prob"]
@@ -434,7 +431,7 @@ def main():
     df_sorted_margin_small = df.sort_values("Margin (Top1-Top2)", ascending=True).head(TOPK).reset_index(drop=True)
 
     # 2) Bar chart: Top-K by Confidence Score (your legacy score = 1 - margin)
-    labels_conf = [f"{int(gp)} ({m})" for gp, m in zip(df_sorted_conf["Global Position"], df_sorted_conf["Mutation"])]
+    labels_conf = [f"{int(gp)} ({m})" for gp, m in zip(df_sorted_conf["Position"], df_sorted_conf["Mutation"])]
     plt.figure(figsize=(10, 3.6))
     plt.bar(range(len(df_sorted_conf)), df_sorted_conf["Confidence Score"])
     plt.xticks(range(len(df_sorted_conf)), labels_conf, rotation=60, ha="right")
@@ -443,7 +440,7 @@ def main():
     plt.tight_layout(); plt.savefig("figures/top_mutations_confidence.png")
 
     # 3) Bar chart: Top-K most ambiguous (smallest margin)
-    labels_amb = [f"{int(gp)} ({m})" for gp, m in zip(df_sorted_margin_small["Global Position"], df_sorted_margin_small["Mutation"])]
+    labels_amb = [f"{int(gp)} ({m})" for gp, m in zip(df_sorted_margin_small["Position"], df_sorted_margin_small["Mutation"])]
     plt.figure(figsize=(10, 3.6))
     plt.bar(range(len(df_sorted_margin_small)), df_sorted_margin_small["Margin (Top1-Top2)"])
     plt.xticks(range(len(df_sorted_margin_small)), labels_amb, rotation=60, ha="right")
@@ -453,15 +450,15 @@ def main():
 
     # 4) Scatter across the RBD: Confidence vs Position
     plt.figure(figsize=(8, 3.4))
-    plt.scatter(df["Global Position"], df["Confidence Score"], s=16, alpha=0.7)
-    plt.xlabel("Spike residue (global numbering)")
+    plt.scatter(df["Position"], df["Confidence Score"], s=16, alpha=0.7)
+    plt.xlabel("protein residue")
     plt.ylabel("Confidence (1 − margin)")
     plt.title("Confidence vs position (all candidates)")
     # annotate a few key sites if present
     for key_gp in [484, 501, 502]:
-        hit = df.loc[df["Global Position"] == key_gp]
+        hit = df.loc[df["Position"] == key_gp]
         if not hit.empty:
-            x = float(hit["Global Position"].iloc[0])
+            x = float(hit["Position"].iloc[0])
             y = float(hit["Confidence Score"].iloc[0])
             plt.scatter([x], [y], s=40)
             plt.annotate(str(key_gp), (x, y), fontsize=9, xytext=(4, 4), textcoords="offset points")
@@ -475,7 +472,7 @@ def main():
     plt.figure(figsize=(10, 3.6))
     plt.bar(x - w/2, subset["Top1 Prob"], width=w, label="Top1 Prob")
     plt.bar(x + w/2, subset["Top2 Prob"], width=w, label="Top2 Prob")
-    xt = [f"{int(gp)}\n{mut}" for gp, mut in zip(subset["Global Position"], subset["Mutation"])]
+    xt = [f"{int(gp)}\n{mut}" for gp, mut in zip(subset["Position"], subset["Mutation"])]
     plt.xticks(x, xt, rotation=0)
     plt.ylabel("Probability")
     plt.title("Top1 vs Top2 probabilities at most ambiguous sites")
@@ -488,7 +485,7 @@ def main():
     xp = np.arange(len(subset_ratio))
     plt.hlines(y=xp, xmin=0.0, xmax=subset_ratio["Top2/Top1 Ratio"], colors="black", linewidth=1)
     plt.plot(subset_ratio["Top2/Top1 Ratio"], xp, "o")
-    yt = [f"{int(gp)} ({m})" for gp, m in zip(subset_ratio["Global Position"], subset_ratio["Mutation"])]
+    yt = [f"{int(gp)} ({m})" for gp, m in zip(subset_ratio["Position"], subset_ratio["Mutation"])]
     plt.yticks(xp, yt)
     plt.xlabel("Top2 / Top1 probability ratio")
     plt.title("Ambiguity by Top2/Top1 ratio (higher = more ambiguous)")
@@ -520,7 +517,7 @@ def main():
     cbar = plt.colorbar(im, fraction=0.046, pad=0.04)
     cbar.set_label("Shannon entropy (nats)")
 
-    plt.xlabel("Spike residue (global numbering)")
+    plt.xlabel("protein residue")
     plt.title("Per-residue uncertainty from MC-dropout (Shannon entropy)")
     plt.tight_layout()
     plt.savefig("figures/Fig2_entropy_heatmap.png")
