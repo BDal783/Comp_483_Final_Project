@@ -81,6 +81,9 @@ conda deactivate
 
 * entropy_strip.png: High entropy peaks represent areas where the Autoencoder’s "accuracy" is lowest. This tells you which parts of the protein the model finds complex or poorly represented in the training data.
 
+<img width="1514" height="259" alt="Epistemic_var_strip" src="https://github.com/user-attachments/assets/2603ccb0-8fb5-4c57-b23c-e3949eef90c9" />
+
+
 * epistemic_var_strip.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
 
 ## Authors
