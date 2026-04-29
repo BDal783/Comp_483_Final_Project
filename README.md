@@ -1,13 +1,13 @@
 # **COMP483 Project: Machine Learning for Predicting Viral Protein Mutational Landscapes**
 
 
-## Highlights
+## 💫 Highlights
   * Users input a template text file to pull FASTA files for viral proteins from NCBI
   * Pipeline creates a multiple sequence alignment using MAFFT
   * Utilizes an autoencoder for unsupervised machine learning and predicts mutational hotspots in viral protein sequences
   * Generates tables and figures to summarize predicted hotspots for analysis
 
-## Overview
+## 📑 Overview
 
 In this project, we adapt the AEGIS (AutoEncoder-driven Genomic Insight System) framework, developed by the 
 [Miller Lab](https://github.com/mccainwa/Dr.Miller-Lab-MP), 
@@ -22,7 +22,7 @@ This pipeline is designed to simplify large-scale viral sequence analysis and
 provide a fast, reproducible method for identifying regions of evolutionary 
 variability. For more information, see the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki)
 
-## Methods
+## ⚙️ Methods
 The main script, aegis.py, runs the full pipeline by calling other scripts via subprocess. For more information, visit the [project wiki](https://github.com/BDal783/Comp_483_Final_Project/wiki). The general steps the framework implements are as follows:
 
 1. Retrieving viral protein sequences from NCBI
@@ -32,8 +32,8 @@ The main script, aegis.py, runs the full pipeline by calling other scripts via s
 5. Run autoencoder and include Monte Carlo dropout inference and Markov transition modeling 
 7. Output figures
 
-## Usage Instructions 
-### Setup
+## ✨ Usage Instructions 
+### 🛠️ Setup
 This project utilizes a conda virtual environment to ensure the AEGIS pipeline runs smoothly with the correct package versions. Follow the steps below:
 
 Clone repo:
@@ -53,7 +53,7 @@ Create environment (only once, unless conda_env.yaml changes):
 ```
 conda env create -f conda_env.yaml
 ```
-### Running the Pipeline
+### ▶️ Running the Pipeline
 Activate virtual environment (every session):
 ```
 conda activate aegis
@@ -65,17 +65,21 @@ Once you have filled out the template text file, you can run the full pipeline b
 python aegis.py -i proteinSearch.txt
 ```
 
+If you would like to adjust the filtering threshold for the amount of ambiguous amino acids, enter an additional argument with the percent cutoff; the default is set to 5%. As an example, to set the threshold to remove 10% or greater ambiguous sequences, run the following command:
+```
+python aegis.py -i proteinSearch.txt -p 10
+```
+
 Deactivate virtual environment (optional)
 ```
 conda deactivate
 ```
 
-## Outputs
+## 🔍 Outputs
 
 <img width="3000" height="1050" alt="heatmap_probs_top_hotspots" src="https://github.com/user-attachments/assets/39827f65-3b81-47d3-a7af-42db03702a7c" />
 
-* heatmap_probs_top_hotspots.png: Shows mutational hotspots and probability of mutating to each amino acid
-
+* heatmap_probs_top_hotspots.png: Shows mutational hotspots and the probability of mutating to each amino acid
 
 <img width="3000" height="525" alt="entropy_strip" src="https://github.com/user-attachments/assets/ad8104c4-ef5a-4c3a-b39d-fdd21a1ca78d" />
 
@@ -83,11 +87,10 @@ conda deactivate
 
 <img width="1514" height="259" alt="Epistemic_var_strip" src="https://github.com/user-attachments/assets/2603ccb0-8fb5-4c57-b23c-e3949eef90c9" />
 
-
 * epistemic_var_strip.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
 
-## Authors
-This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) to be completed as our final project in COMP483 Computational Biology.
+## 🙏 Authors
+This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) as our final project in COMP483 Computational Biology.
 
-## Special Thanks
+## 👏 Special Thanks
 We would like to express our appreciation to the members of the Miller lab for providing us with this opportunity and guiding us throughout this project. We would also like to thank our professor, Dr. Heather Wheeler, and our COMP483 classmates for their support and feedback on this project.
