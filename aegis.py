@@ -1,9 +1,10 @@
-
+"""Connnects all scripts to run aegis pipeline"""
 
 import subprocess
 import argparse
 import sys
 import time
+import os
 
 def main():
 
@@ -22,27 +23,30 @@ def main():
         thres = args.threshold
     else:
         thres = '5'
+    
+    # Create fasta directory
+    os.makedirs("fasta", exist_ok=True)
 
     print('Retrieving data')
     # Retrieve data
-    subprocess.run(['python', 'scripts/ncbi_extract.py', '-i', infile, '-o', 'proteins.txt'], check=True)
+    subprocess.run(['python', 'scripts/ncbi_extract.py', '-i', infile, '-o', 'fasta/proteins.txt'], check=True)
     print('Data retrieved')
 
     print(f'Filtering low quality reads with {thres}% threshold')
     # Filter low quality sequences
-    subprocess.run(['python', 'scripts/filter.py', '-i', 'proteins.txt', '-o', 
-                    'filtered_proteins.txt', '-p', thres])
+    subprocess.run(['python', 'scripts/filter.py', '-i', 'fasta/proteins.txt', '-o', 
+                    'fasta/filtered_proteins.txt', '-p', thres])
     print('Reads filtered')
 
     print('Performing multiple sequence alignment')
     # Perform MSA 
-    with open('aligned.txt', 'w') as f:
-        subprocess.run(['mafft', '--auto', '--quiet', 'filtered_proteins.txt'], stdout=f, check=True) 
+    with open('fasta/aligned.txt', 'w') as f:
+        subprocess.run(['mafft', '--auto', '--quiet', 'fasta/filtered_proteins.txt'], stdout=f, check=True) 
     print('Sequences aligned') 
 
     print('Running autoencoder')
     # Perform autoencoder
-    subprocess.run(['python', 'scripts/temp_autoencoder.py', '-i', 'aligned.txt'])  
+    subprocess.run(['python', 'scripts/autoencoder.py', '-i', 'fasta/aligned.txt'])  
     print('AEGIS pipeline complete') 
     
 
