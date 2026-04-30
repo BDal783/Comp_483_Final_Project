@@ -66,10 +66,6 @@ def main():
     # Get the amino acid sequences as input data
     sequences = df.iloc[:, 1:].astype(str).values
 
-    # # Remove rows containing 'X' or 'J' in the sequences
-    # mask = (~(sequences == 'X')).all(axis=1) & (~(sequences == 'J')).all(axis=1)
-    # sequences = sequences[mask]
-
     # Find unique symbols in amino acids
     # Should be 22 symbols with X included
     amino_acids = np.unique(sequences)
@@ -537,7 +533,7 @@ def main():
     plt.figure(figsize=(10, 1.8))
     im = plt.imshow(H, aspect="auto", origin="lower", interpolation="nearest")
     plt.yticks([0], ["Entropy"])
-    # Show global spike numbering on x-axis sparsely
+    # Show position numbering on x-axis sparsely
     tick_idx = np.linspace(0, L-1, 12, dtype=int)
     plt.xticks(tick_idx, (pos_axis[tick_idx]).astype(int), rotation=0)
 
