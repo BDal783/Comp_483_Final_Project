@@ -248,12 +248,33 @@ def main():
             "Mutation": f"{aa1} -> {aa2}",
             "Top1 Prob": float(p1[pos]),
             "Top2 Prob": float(p2[pos]),
+            "Margin": float(margin[pos]),
             "Confidence Score": confidence
         })
 
     mutation_df = pd.DataFrame(mutation_rows)
     mutation_df.to_excel("results/top_mutations_mc.xlsx", index=False)
     print(mutation_df)
+
+    # Compare with least variable positions
+    min_diff_positions = np.argsort(margin)[-K:]
+
+    mutation_rows = []
+    for pos in min_diff_positions:
+        aa1 = int_to_amino_acid[int(top1_idx[pos])]
+        aa2 = int_to_amino_acid[int(top2_idx[pos])]
+        confidence = 1.0 - float(margin[pos])
+        mutation_rows.append({
+            "Position": int(pos),
+            "Mutation": f"{aa1} -> {aa2}",
+            "Top1 Prob": float(p1[pos]),
+            "Top2 Prob": float(p2[pos]),
+            "Margin": float(margin[pos]),
+            "Confidence Score": confidence
+        })
+
+    mutation_df = pd.DataFrame(mutation_rows)
+    mutation_df.to_excel("results/least_variable_mc.xlsx", index=False)
 
     #%% plots and graphs
 
@@ -321,7 +342,7 @@ def main():
     # Charged
     'D','E','K','R','H',
     #ambigous
-    'B', 'Z', 'Z',
+    'B', 'Z',
     # other
     'G','P','C'
     ]
@@ -351,7 +372,7 @@ def main():
     plt.yticks(np.arange(len(amino_acids_reordered)), amino_acids_reordered)
     plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
     plt.colorbar(label="Probability")
-    plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
+    plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
     plt.title("Per-AA probabilities at top hotspots (MC Mean Sorted by Ambiguity)")
     plt.tight_layout(); plt.savefig("results/heatmap_probs_top_hotspots.png")
 
@@ -380,7 +401,7 @@ def main():
     plt.boxplot(box_data)
     plt.xticks(range(1, len(subset) + 1),[str(pos_axis[i]) for i in subset])
     plt.ylabel("Top amino acid probability")
-    plt.xlabel("Spike residue")
+    plt.xlabel("Protein residue")
     plt.title("MC Dropout variability in prediction confidence")
 
     plt.tight_layout(); plt.savefig("results/BoxPlotofVariation.png")
@@ -515,36 +536,36 @@ def main():
     plt.tight_layout(); plt.savefig("results/lollipop_top2_over_top1.png")
 
     # 7) Export figure-ready tables (optional)
-    df_sorted_conf.to_excel("results/table_topK_confidence.xlsx", index=False)
+    #df_sorted_conf.to_excel("results/table_topK_confidence.xlsx", index=False)
     df_sorted_margin_small.to_excel("results/table_topK_small_margin.xlsx", index=False)
 
     print("Saved results to: results/")
 
     #%% this is just for poster. can delete after
 
-    # If you didn't store entropy_pos earlier, compute it now:
-    eps = 1e-12
-    if 'entropy_pos' not in globals():
-        entropy_pos = -(mean_prob_mc * np.log(np.clip(mean_prob_mc, eps, None))).sum(axis=1)
+    # # If you didn't store entropy_pos earlier, compute it now:
+    # eps = 1e-12
+    # if 'entropy_pos' not in globals():
+    #     entropy_pos = -(mean_prob_mc * np.log(np.clip(mean_prob_mc, eps, None))).sum(axis=1)
 
-    # Make a 1 x L heatmap (row = entropy)
-    H = entropy_pos[np.newaxis, :]  # shape (1, L)
+    # # Make a 1 x L heatmap (row = entropy)
+    # H = entropy_pos[np.newaxis, :]  # shape (1, L)
 
-    plt.figure(figsize=(10, 1.8))
-    im = plt.imshow(H, aspect="auto", origin="lower", interpolation="nearest")
-    plt.yticks([0], ["Entropy"])
-    # Show position numbering on x-axis sparsely
-    tick_idx = np.linspace(0, L-1, 12, dtype=int)
-    plt.xticks(tick_idx, (pos_axis[tick_idx]).astype(int), rotation=0)
+    # plt.figure(figsize=(10, 1.8))
+    # im = plt.imshow(H, aspect="auto", origin="lower", interpolation="nearest")
+    # plt.yticks([0], ["Entropy"])
+    # # Show position numbering on x-axis sparsely
+    # tick_idx = np.linspace(0, L-1, 12, dtype=int)
+    # plt.xticks(tick_idx, (pos_axis[tick_idx]).astype(int), rotation=0)
 
-    cbar = plt.colorbar(im, fraction=0.046, pad=0.04)
-    cbar.set_label("Shannon entropy (nats)")
+    # cbar = plt.colorbar(im, fraction=0.046, pad=0.04)
+    # cbar.set_label("Shannon entropy (nats)")
 
-    plt.xlabel("protein residue")
-    plt.title("Per-residue uncertainty from MC-dropout (Shannon entropy)")
-    plt.tight_layout()
-    plt.savefig("results/Fig2_entropy_heatmap.png")
-    plt.close()
+    # plt.xlabel("protein residue")
+    # plt.title("Per-residue uncertainty from MC-dropout (Shannon entropy)")
+    # plt.tight_layout()
+    # plt.savefig("results/Fig2_entropy_heatmap.png")
+    # plt.close()
 
 if __name__ == '__main__':
     main()
