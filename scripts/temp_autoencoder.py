@@ -116,7 +116,7 @@ def main():
     latent_vectors = encoders.predict(encoded_sequences, verbose=0)
 
     #%% Monte Carlo Dropout Inference (AEGIS)
-    T = 1000                  # increase if you have time/compute (e.g., 500–1000)
+    T = 200                  # increase if you have time/compute (e.g., 500–1000)
     eps = 1e-12
 
     mc_pass_means = []       # each item: (L, V) mean over test samples for that pass
@@ -335,8 +335,14 @@ def main():
     P = mean_prob_mc[subset, :]  
     # creates an index map of amino acids
     aa_to_idx = {aa: i for i, aa in enumerate(amino_acids)}
+    #double checking only amino acids in data are used (prevents crashing)
+    valid_aa = [aa for aa in aa_order if aa in aa_to_idx]
+    #adds any amino acids not in key
+    extra_aa = [aa for aa in amino_acids if aa not in aa_order]
+    final_aa = valid_aa + extra_aa
     #reordering them to group by type
-    reorder_idx = [aa_to_idx[aa] for aa in aa_order]
+    reorder_idx = [aa_to_idx[aa] for aa in final_aa]
+    amino_acids_reordered = final_aa
     #reorders probabilities
     P = P[:, reorder_idx]
     #normalizes inter column for better internal change understanding but losing between column comparison
@@ -344,23 +350,42 @@ def main():
 
     plt.figure(figsize=(10, 3.5))
     plt.imshow(P.T, aspect="auto", origin="lower", interpolation="nearest")
-    plt.yticks(np.arange(len(aa_order)), aa_order)
+    plt.yticks(np.arange(len(amino_acids_reordered)), amino_acids_reordered)
     plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
     plt.colorbar(label="Probability")
-    plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
+    plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
     plt.title("Per-AA probabilities at top hotspots (MC Mean Sorted by Ambiguity)")
     plt.tight_layout(); plt.savefig("figures/heatmap_probs_top_hotspots.png")
 
     #looking within row variation
     plt.figure(figsize=(10, 3.5))
     plt.imshow(P_norm.T, aspect="auto", origin="lower", interpolation="nearest")
-    plt.yticks(np.arange(len(aa_order)), aa_order)
+    plt.yticks(np.arange(len(amino_acids_reordered)), amino_acids_reordered)
     plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
     plt.colorbar(label="Relative probability")
     plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
     plt.title("Per-AA probabilities at top hotspots (MC Mean Normalized)")
   
     plt.tight_layout(); plt.savefig("figures/heatmap_probs_normalized.png")
+
+    #%% Attempt at box plot to capture variation
+    subset = rank_idx[np.argsort(-score_fused[rank_idx])]
+
+    box_data = []
+
+    for pos in subset:
+        # For each run, take the highest probability amino acid
+        top_probs = mc_pass_means[:, pos, :].max(axis=1)  
+        box_data.append(top_probs)
+
+    plt.figure(figsize=(10, 4))
+    plt.boxplot(box_data)
+    plt.xticks(range(1, len(subset) + 1),[str(pos_axis[i]) for i in subset])
+    plt.ylabel("Top amino acid probability")
+    plt.xlabel("Spike residue")
+    plt.title("MC Dropout variability in prediction confidence")
+
+    plt.tight_layout(); plt.savefig("figures/BoxPlotofVariation.png")
     #%% Markov transition heatmap (OK this doesn't really work idk why)
 
     # Average transition matrix across positions
