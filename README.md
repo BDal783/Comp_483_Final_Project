@@ -79,15 +79,15 @@ conda deactivate
 
 <img width="1595" height="600" alt="Screenshot 2026-05-01 090205" src="https://github.com/user-attachments/assets/7a100a1b-097f-4205-ac01-d1768d741630" />
 
-* heatmap_probs_top_hotspots.png: Shows mutational hotspots and the probability of mutating to each amino acid
+* heatmap_probs_top_hotspots.png: Shows mutational hotspots and the probability of each amino acid occurring at that position. 
 
 <img width="1595" height="600" alt="Screenshot 2026-05-01 090214" src="https://github.com/user-attachments/assets/758e503d-4ae6-43c1-839b-a7b38021d94e" />
 
-* heatmap_probs_normalized.png: High entropy peaks represent areas where the Autoencoder’s "accuracy" is lowest. This tells you which parts of the protein the model finds complex or poorly represented in the training data.
+* heatmap_probs_normalized.png: Normalized version of the previous heatmap that sets the top probability to 100%. Highlights the variability at that position. 
 
 <img width="1595" height="600" alt="Screenshot 2026-05-01 090157" src="https://github.com/user-attachments/assets/a5c40633-c647-40fd-ac66-2b7f6a4dcec8" />
 
-* heatmap_probs_least_variable.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
+* heatmap_probs_least_variable.png: Shows the sequence positions with the least variability in amino acids. One cell being yellow indicates that only that amino acid shows up in that position across variants.
 
 ## 🙏 Authors
 This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) as our final project in COMP483 Computational Biology.
