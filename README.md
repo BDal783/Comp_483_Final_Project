@@ -85,7 +85,7 @@ conda deactivate
 
 * heatmap_probs_normalized.png: Normalized version of the previous heatmap that sets the top probability to 100%. Highlights the variability at that position. 
 
-<img width="1595" height="600" alt="Screenshot 2026-05-01 090157" src="https://github.com/user-attachments/assets/a5c40633-c647-40fd-ac66-2b7f6a4dcec8" />
+<img width="1595" height="600" alt="Screenshot 2026-05-01 141817" src="https://github.com/user-attachments/assets/59f2e67d-3048-4485-8c69-b5a20a66a90e" />
 
 * heatmap_probs_least_variable.png: Shows the sequence positions with the least variability in amino acids. One cell being yellow indicates that only that amino acid shows up in that position across variants.
 
