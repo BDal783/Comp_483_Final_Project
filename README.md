@@ -77,17 +77,17 @@ conda deactivate
 
 ## 🔍 Outputs
 
-<img width="3000" height="1050" alt="heatmap_probs_top_hotspots" src="https://github.com/user-attachments/assets/39827f65-3b81-47d3-a7af-42db03702a7c" />
+<img width="1595" height="600" alt="Screenshot 2026-05-01 090205" src="https://github.com/user-attachments/assets/7a100a1b-097f-4205-ac01-d1768d741630" />
 
 * heatmap_probs_top_hotspots.png: Shows mutational hotspots and the probability of mutating to each amino acid
 
-<img width="3000" height="525" alt="entropy_strip" src="https://github.com/user-attachments/assets/ad8104c4-ef5a-4c3a-b39d-fdd21a1ca78d" />
+<img width="1595" height="600" alt="Screenshot 2026-05-01 090214" src="https://github.com/user-attachments/assets/758e503d-4ae6-43c1-839b-a7b38021d94e" />
 
-* entropy_strip.png: High entropy peaks represent areas where the Autoencoder’s "accuracy" is lowest. This tells you which parts of the protein the model finds complex or poorly represented in the training data.
+* heatmap_probs_normalized.png: High entropy peaks represent areas where the Autoencoder’s "accuracy" is lowest. This tells you which parts of the protein the model finds complex or poorly represented in the training data.
 
-<img width="1514" height="259" alt="Epistemic_var_strip" src="https://github.com/user-attachments/assets/2603ccb0-8fb5-4c57-b23c-e3949eef90c9" />
+<img width="1595" height="600" alt="Screenshot 2026-05-01 090157" src="https://github.com/user-attachments/assets/a5c40633-c647-40fd-ac66-2b7f6a4dcec8" />
 
-* epistemic_var_strip.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
+* heatmap_probs_bottom_hotspots.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
 
 ## 🙏 Authors
 This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) as our final project in COMP483 Computational Biology.
