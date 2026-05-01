@@ -277,7 +277,7 @@ def main():
     mutation_df = pd.DataFrame(mutation_rows)
     mutation_df.to_excel("results/least_variable_mc.xlsx", index=False)
 
-    #%% plots and graphs
+    #%% Plots and Graphs
 
     #setup for all graphs
     plt.rcParams.update({"figure.dpi": 160, "savefig.dpi": 300, "font.size": 10})
@@ -324,7 +324,6 @@ def main():
 
 
     #%% Margin vs Entropy scatter
-
     plt.figure(figsize=(5, 4))
     plt.scatter(margin, entropy_pos, s=12, alpha=0.6)
     for pos in rank_idx[:5]:  # annotate a few top sites
@@ -333,7 +332,8 @@ def main():
     plt.title("Ambiguity vs. dispersion")
     plt.tight_layout(); plt.savefig("results/margin_vs_entropy.png");
 
-    #%% Probability heatmap
+
+    #%% Probability heatmaps
     #oredering amino acide by groups for better understanding
     aa_order = [
     # Hydrophobic
@@ -347,7 +347,6 @@ def main():
     # other
     'G','P','C'
     ]
-    #print(len(amino_acids), amino_acids)
 
     #sorts rank idx (the top 15 most ambigous hotspots) internally in descending order
     subset = rank_idx[np.argsort(-score_fused[rank_idx])]
@@ -377,7 +376,7 @@ def main():
     #print("mapped positions:", [pos_axis[i] for i in subsetA])
     plt.colorbar(label="Probability")
     plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
-    plt.title("Per-AA probabilities at top hotspots (MC Mean Sorted by Ambiguity)")
+    plt.title("Per-AA probabilities at top hotspots (MC Mean)")
     plt.tight_layout(); plt.savefig("results/heatmap_probs_top_hotspots.png")
 
     #looking within row variation
@@ -416,9 +415,9 @@ def main():
     plt.yticks(np.arange(len(amino_acids_reordered2)), amino_acids_reordered2)
     plt.xticks(range(len(subset2)), [str(pos_axis[i]) for i in subset2], rotation=0)
     plt.colorbar(label="Probability")
-    plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
-    plt.title("Per-AA probabilities at Top Probability Spots (MC Mean Sorted by Probability)")
-    plt.tight_layout(); plt.savefig("results/heatmap_probs_top_prob.png")
+    plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
+    plt.title("Per-AA probabilities at Least Variable Spots (MC Mean)")
+    plt.tight_layout(); plt.savefig("results/heatmap_probs_least_variable.png")
     #%% Attempt at box plot to capture variation
     subset = rank_idx[np.argsort(-score_fused[rank_idx])]
 
@@ -437,8 +436,9 @@ def main():
     plt.title("MC Dropout variability in prediction confidence")
 
     plt.tight_layout(); plt.savefig("results/BoxPlotofVariation.png")
-    #%% Markov transition heatmap (OK this doesn't really work idk why)
 
+
+    #%% Markov transition heatmap (OK this doesn't really work idk why)
     # Average transition matrix across positions
     Tavg = Tmat.mean(axis=0)  # V×V
     plt.figure(figsize=(5, 4))
@@ -457,8 +457,8 @@ def main():
     plt.title(f"Markov transitions at position {pos_axis[j0]}")
     plt.tight_layout(); plt.savefig(f"results/markov_transition_pos_{pos_axis[j0]}.png")
 
-    #%% MC vs Fused (Markov) rank comparison
 
+    #%% MC vs Fused (Markov) rank comparison
     # ranks (lower = better)
     rank_mc = np.argsort(-score_mc)
     rank_fused = np.argsort(-score_fused)
@@ -476,8 +476,8 @@ def main():
         plt.annotate(str(pos_axis[m]), (inv_rank_mc[m], inv_rank_fused[m]), fontsize=8)
     plt.tight_layout(); plt.savefig("results/rank_shift_mc_vs_fused.png");
 
-    #%% Modeling top_mutations_mc
 
+    #%% Modeling top_mutations_mc
     plt.rcParams.update({"figure.dpi": 160, "savefig.dpi": 300, "font.size": 10})
     os.makedirs("results", exist_ok=True)
 
