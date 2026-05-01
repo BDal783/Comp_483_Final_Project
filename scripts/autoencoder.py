@@ -189,6 +189,7 @@ def main():
     # Save top-K fused hotspots
     TOPK = 20
     rank_idx = np.argsort(-score_fused)[:TOPK]
+    topProb = np.argsort(score_fused)[:TOPK]
 
     # make results directory
     os.makedirs("results", exist_ok=True)
@@ -350,8 +351,10 @@ def main():
 
     #sorts rank idx (the top 15 most ambigous hotspots) internally in descending order
     subset = rank_idx[np.argsort(-score_fused[rank_idx])]
+    #print("subsetA indices:", subsetA)
+    subsetA = subset[np.argsort(pos_axis[subset])]
     #grabs probabilities
-    P = mean_prob_mc[subset, :]  
+    P = mean_prob_mc[subsetA, :]  
     # creates an index map of amino acids
     aa_to_idx = {aa: i for i, aa in enumerate(amino_acids)}
     #double checking only amino acids in data are used (prevents crashing)
@@ -370,7 +373,8 @@ def main():
     plt.figure(figsize=(10, 3.5))
     plt.imshow(P.T, aspect="auto", origin="lower", interpolation="nearest")
     plt.yticks(np.arange(len(amino_acids_reordered)), amino_acids_reordered)
-    plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
+    plt.xticks(range(len(subsetA)), [str(pos_axis[i]) for i in subsetA], rotation=0)
+    #print("mapped positions:", [pos_axis[i] for i in subsetA])
     plt.colorbar(label="Probability")
     plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
     plt.title("Per-AA probabilities at top hotspots (MC Mean Sorted by Ambiguity)")
@@ -380,13 +384,41 @@ def main():
     plt.figure(figsize=(10, 3.5))
     plt.imshow(P_norm.T, aspect="auto", origin="lower", interpolation="nearest")
     plt.yticks(np.arange(len(amino_acids_reordered)), amino_acids_reordered)
-    plt.xticks(range(len(subset)), [str(pos_axis[i]) for i in subset], rotation=0)
+    plt.xticks(range(len(subsetA)), [str(pos_axis[i]) for i in subsetA], rotation=0)
     plt.colorbar(label="Relative probability")
     plt.xlabel("Protein residue"); plt.ylabel("Amino acid")
     plt.title("Per-AA probabilities at top hotspots (MC Mean Normalized)")
   
     plt.tight_layout(); plt.savefig("results/heatmap_probs_normalized.png")
 
+    #sorts 
+    subset2 = topProb[np.argsort(score_fused[topProb])]
+    #subset2 = np.sort(subset2)
+    subset2 = subset2[np.argsort(pos_axis[subset2])]
+
+    #grabs probabilities
+    P2 = mean_prob_mc[subset2, :]  
+    # creates an index map of amino acids
+    aa_to_idx2 = {aa: i for i, aa in enumerate(amino_acids)}
+    #double checking only amino acids in data are used (prevents crashing)
+    valid_aa2 = [aa for aa in aa_order if aa in aa_to_idx2]
+    #adds any amino acids not in key
+    extra_aa2 = [aa for aa in amino_acids if aa not in aa_order]
+    final_aa2 = valid_aa2 + extra_aa2
+    #reordering them to group by type
+    reorder_idx = [aa_to_idx2[aa] for aa in final_aa2]
+    amino_acids_reordered2 = final_aa2
+    #reorders probabilities
+    P2 = P2[:, reorder_idx]
+
+    plt.figure(figsize=(10, 3.5))
+    plt.imshow(P2.T, aspect="auto", origin="lower", interpolation="nearest")
+    plt.yticks(np.arange(len(amino_acids_reordered2)), amino_acids_reordered2)
+    plt.xticks(range(len(subset2)), [str(pos_axis[i]) for i in subset2], rotation=0)
+    plt.colorbar(label="Probability")
+    plt.xlabel("Spike residue"); plt.ylabel("Amino acid")
+    plt.title("Per-AA probabilities at Top Probability Spots (MC Mean Sorted by Probability)")
+    plt.tight_layout(); plt.savefig("results/heatmap_probs_top_prob.png")
     #%% Attempt at box plot to capture variation
     subset = rank_idx[np.argsort(-score_fused[rank_idx])]
 
