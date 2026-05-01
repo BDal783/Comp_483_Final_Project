@@ -16,7 +16,4 @@ dependencies:
   - python-snappy
   - openpyxl
   - mafft
-  - clustalomega
   - biopython
-  - pip:
-    - kalign-python
