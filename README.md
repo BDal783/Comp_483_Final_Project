@@ -87,7 +87,7 @@ conda deactivate
 
 <img width="1595" height="600" alt="Screenshot 2026-05-01 090157" src="https://github.com/user-attachments/assets/a5c40633-c647-40fd-ac66-2b7f6a4dcec8" />
 
-* heatmap_probs_bottom_hotspots.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
+* heatmap_probs_least_variable.png: Shows the peaks for the level of variance due to unknown information for the top hotspot positions. As with entropy, higher epistemic variance indicates a likely mutation hotspot in the sequence.
 
 ## 🙏 Authors
 This project was worked on by [Brendon Dal](https://github.com/BDal783), [Leah Briscoe](https://github.com/leahbriscoe830), and [Jimmy Capecci](https://github.com/jcapecci09). We are master's students studying bioinformatics at Loyola University Chicago, and we have been tasked with improving the AEGIS framework. This project was given to us by the [Miller Lab](https://wmiller6.sites.luc.edu/assets/GroupMembers.html) as our final project in COMP483 Computational Biology.
