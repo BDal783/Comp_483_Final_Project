@@ -265,6 +265,8 @@ def main():
         confidence = 1.0 - float(margin[pos])  # your legacy "1 - margin" score
         full_sequence.append({
             "Position": int(pos),
+            "Most Likely AA": aa1,
+            "Second Most Likely AA": aa2,
             "Mutation": f"{aa1} -> {aa2}",
             "Top1 Prob": float(p1[pos]),
             "Top2 Prob": float(p2[pos]),
@@ -273,7 +275,8 @@ def main():
         })
     
     sequence_df = pd.DataFrame(full_sequence)
-    sequence_df.to_csv("results/sequence_check.csv", index = False)
+    sorted_sequence = sequence_df.sort_values(by=sequence_df.columns[0])
+    sorted_sequence.to_csv("results/sequence_check.csv", index = False)
     # Compare with least variable positions
     min_diff_positions = np.argsort(margin)[-K:]
 
