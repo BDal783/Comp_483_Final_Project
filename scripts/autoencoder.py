@@ -255,8 +255,25 @@ def main():
 
     mutation_df = pd.DataFrame(mutation_rows)
     mutation_df.to_excel("results/top_mutations_mc.xlsx", index=False)
-    print(mutation_df)
+    #print(mutation_df)
 
+    full_sequence = []
+    min_diff_positions = np.argsort(margin)
+    for pos in min_diff_positions:
+        aa1 = int_to_amino_acid[int(top1_idx[pos])]
+        aa2 = int_to_amino_acid[int(top2_idx[pos])]
+        confidence = 1.0 - float(margin[pos])  # your legacy "1 - margin" score
+        full_sequence.append({
+            "Position": int(pos),
+            "Mutation": f"{aa1} -> {aa2}",
+            "Top1 Prob": float(p1[pos]),
+            "Top2 Prob": float(p2[pos]),
+            "Margin": float(margin[pos]),
+            "Confidence Score": confidence
+        })
+    
+    sequence_df = pd.DataFrame(full_sequence)
+    sequence_df.to_csv("results/sequence_check.csv", index = False)
     # Compare with least variable positions
     min_diff_positions = np.argsort(margin)[-K:]
 
