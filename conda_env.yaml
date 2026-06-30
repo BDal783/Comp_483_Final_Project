@@ -21,3 +21,4 @@ dependencies:
   - pytorch
   - torchvision
   - cudatoolkit
+  - pysr

@@ -12,6 +12,7 @@ from Bio import SeqIO
 import argparse
 import sys
 import os
+from pysr import PySRRegressor
 
 
 def fasta_to_dataframe(fasta_path: str) -> pd.DataFrame:
@@ -591,7 +592,6 @@ def main():
     #df_sorted_conf.to_excel("results/table_topK_confidence.xlsx", index=False)
     df_sorted_margin_small.to_excel("results/table_topK_small_margin.xlsx", index=False)
 
-    print("Saved results to: results/")
 
     #%% this is just for poster. can delete after
 
@@ -619,5 +619,74 @@ def main():
     # plt.savefig("results/Fig2_entropy_heatmap.png")
     # plt.close()
 
+
+    #%% Extraxting full sequence after running model
+    #printed encoded sequences to see shape of what we are working with
+    #print(encoded_sequences.shape)
+    #need to flatten it into 2 instead of 3 dimensions
+    num_samples = encoded_sequences.shape[0]
+    seq_len = encoded_sequences.shape[1]
+    alphabet_size = encoded_sequences.shape[2]
+
+    X_pysr = encoded_sequences.reshape(num_samples, -1)
+    print(X_pysr.shape)
+
+    encoder_output = autoencoder.get_layer('dense').output
+
+    feature_names = []
+    for pos in range(seq_len):
+        for aa_idx in range(alphabet_size):
+            feature_names.append(f"Pos{pos}_AA{aa_idx}")
+
+    #building model
+    encoder_model = tf.keras.Model(inputs=autoencoder.input, outputs=encoder_output)
+
+    mc_latent_vectors = []
+
+    print(encoded_sequences.shape)
+
+    for i in range(200):
+        latent_predictions = encoder_model(encoded_sequences, training=True)
+        mc_latent_vectors.append(latent_predictions.numpy())
+    #extracting mean across mc samples in numpy array
+    mc_latent_vectors = np.array(mc_latent_vectors)
+    #finding Z dimensionality for gplearn
+    stable_latent_space = np.mean(mc_latent_vectors, axis=0)
+
+    # Initialize PySR
+    PSYRmodel = PySRRegressor(
+        niterations=40,  
+        binary_operators=["+", "*", "-", "/"],
+        unary_operators=["sin", "cos", "exp"],
+        variable_names=[f"Pos_{i}" for i in range(encoded_sequences.shape[1])])
+    
+    PSYRmodel.fit(X_pysr, stable_latent_space[:, 0])
+    print(PSYRmodel)
+    print("The identifying viral marker is:", feature_names[29250])
+    
+    with open("best_formula.txt", "w") as f:
+        f.write(str(PSYRmodel))
+        print("The identifying viral marker is:", feature_names[29250])
+        f.close
+
+    #%% graphing pysr
+
+    equations_df = PSYRmodel.equations_
+    plt.figure(figsize=(8, 5))
+    plt.plot(equations_df['complexity'], equations_df['loss'], marker='o', linestyle='-', color='b')
+    for idx, row in equations_df.iterrows():
+        plt.annotate(f"Eq {idx}", (row['complexity'], row['loss']), textcoords="offset points", xytext=(0,10), ha='center')
+
+    plt.title('Symbolic Regression')
+    plt.xlabel('Formula Complexity (Number of Constants/Operations)')
+    plt.ylabel('Loss (Mean Squared Error against Latent Space)')
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.yscale('symlog', linthresh=1e-5)
+    plt.tight_layout(); plt.savefig("results/PSYR_equation.png");
+    
+
+    print("Saved results to: results/")
+
 if __name__ == '__main__':
     main()
+
