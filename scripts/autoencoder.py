@@ -13,6 +13,12 @@ import argparse
 import sys
 import os
 from pysr import PySRRegressor
+from gplearn.genetic import SymbolicRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF
 
 
 def fasta_to_dataframe(fasta_path: str) -> pd.DataFrame:
@@ -627,7 +633,7 @@ def main():
     num_samples = encoded_sequences.shape[0]
     seq_len = encoded_sequences.shape[1]
     alphabet_size = encoded_sequences.shape[2]
-
+    
     X_pysr = encoded_sequences.reshape(num_samples, -1)
     print(X_pysr.shape)
 
@@ -652,12 +658,14 @@ def main():
     mc_latent_vectors = np.array(mc_latent_vectors)
     #finding Z dimensionality for gplearn
     stable_latent_space = np.mean(mc_latent_vectors, axis=0)
-
+    '''
     # Initialize PySR
     PSYRmodel = PySRRegressor(
-        niterations=40,  
+        niterations=100,
+        populations=30,  
         binary_operators=["+", "*", "-", "/"],
         unary_operators=["sin", "cos", "exp"],
+        select_k_features=40,
         variable_names=[f"Pos_{i}" for i in range(encoded_sequences.shape[1])])
     
     PSYRmodel.fit(X_pysr, stable_latent_space[:, 0])
@@ -683,9 +691,108 @@ def main():
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.yscale('symlog', linthresh=1e-5)
     plt.tight_layout(); plt.savefig("results/PSYR_equation.png");
-    
+    '''
+    if len(encoded_sequences.shape) == 3:
+        num_samples, seq_len, num_amino_acids = encoded_sequences.shape
+        X_gplearn = encoded_sequences.reshape(num_samples, seq_len * num_amino_acids)
+    else:
+        X_gplearn = encoded_sequences
 
+    est_gp = SymbolicRegressor(
+        population_size=5000,          # Number of formulas per generation
+        generations=20,                # How long to evolve the equations
+        stopping_criteria=0.01,        # Stop if error gets this low
+        function_set=('add', 'sub', 'mul', 'div', 'sin', 'cos'), # Math operators allowed
+        p_crossover=0.7,               # Probability of mixing two formulas
+        p_subtree_mutation=0.1,        # Probability of mutating a formula
+        max_samples=0.9,               # Row subsampling for speed
+        verbose=1,
+        random_state=42
+    )
+    est_gp.fit(X_gplearn, stable_latent_space[:, 0])
+    print("Identifying Formula for Latent Dimension 0:")
+    print(est_gp._program)
+
+    '''
+
+    # Find which two sequence features correlate most with your target Z_0
+    correlations = [np.abs(np.corrcoef(X_gplearn[:, i], stable_latent_space[:, 0])[0, 1]) for i in range(X_gplearn.shape[1])]
+    top_two_features = np.argsort(correlations)[-2:]
+
+    # Isolate just those two columns for our 3D visualization slice
+    X_slice = X_gplearn[:, top_two_features]
+
+    # Rename the columns to match your train/test split variables
+    X_train, X_test, y_train, y_test = train_test_split(X_slice, stable_latent_space[:, 0], test_size=0.25, random_state=42)
+
+    # 1. Symbolic Regressor (gplearn)
+    est_gp = SymbolicRegressor(population_size=5000, generations=20, parsimony_coefficient=0.01, random_state=42)
+    est_gp.fit(X_train, y_train)
+
+    # 2. Decision Tree
+    est_tree = DecisionTreeRegressor(max_depth=5)
+    est_tree.fit(X_train, y_train)
+
+    # 3. Random Forest
+    est_rf = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42)
+    est_rf.fit(X_train, y_train)
+
+    # Generate the coordinate grid based on your real sequence data limits
+    x0_range = np.linspace(X_slice[:, 0].min(), X_slice[:, 0].max(), 30)
+    x1_range = np.linspace(X_slice[:, 1].min(), X_slice[:, 1].max(), 30)
+    x0, x1 = np.meshgrid(x0_range, x1_range)
+    grid_coordinates = np.c_[x0.ravel(), x1.ravel()]
+
+    # Predict the surfaces using the documentation grid approach
+    y_gp = est_gp.predict(grid_coordinates).reshape(x0.shape)
+    score_gp = est_gp.score(X_test, y_test)
+
+    y_tree = est_tree.predict(grid_coordinates).reshape(x0.shape)
+    score_tree = est_tree.score(X_test, y_test)
+
+    y_rf = est_rf.predict(grid_coordinates).reshape(x0.shape)
+    score_rf = est_rf.score(X_test, y_test)
+
+    # For "Ground Truth", we use a smooth interpolation of your true data points 
+    # since there isn't a known mathematical ground truth for raw biology data.
+    gpr = GaussianProcessRegressor(kernel=RBF(1.0), random_state=42)
+    gpr.fit(X_train, y_train)
+    y_truth = gpr.predict(grid_coordinates).reshape(x0.shape)
+    # Initialize the 2x2 subplot canvas
+    fig = plt.figure(figsize=(14, 12))
+
+    for i, (y_surf, score, title) in enumerate([
+        (y_truth, None, "Ground Truth (Interpolated Data)"),
+        (y_gp, score_gp, "SymbolicRegressor (gplearn)"),
+        (y_tree, score_tree, "DecisionTreeRegressor"),
+        (y_rf, score_rf, "RandomForestRegressor")
+    ]):
+
+        ax = fig.add_subplot(2, 2, i+1, projection='3d')
+        
+        # Dynamically set boundaries based on your viral dataset values
+        ax.set_xlim(X_slice[:, 0].min(), X_slice[:, 0].max())
+        ax.set_ylim(X_slice[:, 1].min(), X_slice[:, 1].max())
+        ax.set_zlim(y_train.min() - 0.5, y_train.max() + 0.5)
+        
+        # Plot the predicted continuous landscape surface
+        ax.plot_surface(x0, x1, y_surf, rstride=1, cstride=1, color='green', alpha=0.4, cmap='viridis')
+        
+        # Scatter your actual raw training virus points onto the graph
+        ax.scatter(X_train[:, 0], X_train[:, 1], y_train, color='red', alpha=0.6, s=15)
+        
+        # Annotate the R^2 accuracy score
+        if score is not None:
+            ax.text2D(0.05, 0.85, f"$R^2 = {score:.4f}$", transform=ax.transAxes, fontsize=12, color='blue')
+        
+    plt.title(title, fontsize=14, pad=10)
+
+    plt.tight_layout()
+    plt.show()
+    '''
+    
     print("Saved results to: results/")
+
 
 if __name__ == '__main__':
     main()
