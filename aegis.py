@@ -32,7 +32,7 @@ def main():
     subprocess.run(['python', 'scripts/ncbi_extract.py', '-i', infile, '-o', 'fasta/proteins.txt'], check=True)
     print('Data retrieved')
 
-     print(f'Filtering low quality reads with {thres}% threshold')
+    print(f'Filtering low quality reads with {thres}% threshold')
     # Filter low quality sequences
     subprocess.run(['python', 'scripts/filter.py', '-i', 'fasta/proteins.txt', '-o', 
                     'fasta/filtered_proteins.txt', '-p', thres])
@@ -56,7 +56,8 @@ def main():
     else:
         subprocess.run(['python', 'scripts/single_autoencoder.py', '-i', 'fasta/aligned.txt'])
     print('AEGIS pipeline complete') 
-    
+
+    subprocess.run(['python', 'scripts/FASTA_Maker.py', check=True)
 
 if __name__ == '__main__':
     main()
