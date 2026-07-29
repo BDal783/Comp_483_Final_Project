@@ -32,21 +32,29 @@ def main():
     subprocess.run(['python', 'scripts/ncbi_extract.py', '-i', infile, '-o', 'fasta/proteins.txt'], check=True)
     print('Data retrieved')
 
-    print(f'Filtering low quality reads with {thres}% threshold')
+     print(f'Filtering low quality reads with {thres}% threshold')
     # Filter low quality sequences
     subprocess.run(['python', 'scripts/filter.py', '-i', 'fasta/proteins.txt', '-o', 
                     'fasta/filtered_proteins.txt', '-p', thres])
     print('Reads filtered')
+    #opens file and checks number of sequence to either do single or multi analysis
+    with open("fasta/proteins.txt", "r") as file:
+        total_counts = file.read().count(">")
 
     print('Performing multiple sequence alignment')
-    # Perform MSA 
+        # Perform MSA 
     with open('fasta/aligned.txt', 'w') as f:
-        subprocess.run(['mafft', '--auto', '--quiet', 'fasta/filtered_proteins.txt'], stdout=f, check=True) 
+            subprocess.run(['mafft', '--auto', '--quiet', 'fasta/filtered_proteins.txt'], stdout=f, check=True) 
     print('Sequences aligned') 
+    #decides wether single or multi
+    if total_counts > 1:
 
-    print('Running autoencoder')
-    # Perform autoencoder
-    subprocess.run(['python', 'scripts/autoencoder.py', '-i', 'fasta/aligned.txt'])  
+        print('Running autoencoder')
+        # Perform autoencoder
+        subprocess.run(['python', 'scripts/autoencoder.py', '-i', 'fasta/aligned.txt'])
+
+    else:
+        subprocess.run(['python', 'scripts/single_autoencoder.py', '-i', 'fasta/aligned.txt'])
     print('AEGIS pipeline complete') 
     
 
