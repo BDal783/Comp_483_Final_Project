@@ -56,9 +56,11 @@ def main():
     else:
         subprocess.run(['python', 'scripts/single_autoencoder.py', '-i', 'fasta/aligned.txt'])
     
+    print("Running August's Code")
     subprocess.run(['python', 'mainAI_DataSet1_full_Seq_Auto.py', '-i', 'fasta/aligned.txt'])
-    subprocess.run(['python', 'scripts/FASTA_Maker.py', check=True)
-    print('AEGIS pipeline complete') 
+    print("Creating Final Predicted Sequence")
+    subprocess.run(['python', 'scripts/FASTA_Maker.py'], check=True)
+    print('AEGIS pipeline complete')
 
 
 if __name__ == '__main__':
